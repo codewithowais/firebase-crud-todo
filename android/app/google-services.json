@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "759272314808",
+    "project_id": "jpflutter4b",
+    "storage_bucket": "jpflutter4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759272314808:android:6ba151b033a20ee276e14d",
+        "android_client_info": {
+          "package_name": "com.example.newapp8"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyOQvvFI2q8RR5VREKnUUAT_YBJDbYcoE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
