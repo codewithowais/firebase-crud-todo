@@ -10,7 +10,10 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   CollectionReference todos = FirebaseFirestore.instance.collection('todos');
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
   TextEditingController txtController = TextEditingController();
+  bool isEdit = false;
+  String docId = '';
 
   addTodos() async {
     await todos.add({
@@ -25,9 +28,44 @@ class _HomeViewState extends State<HomeView> {
     // setState(() {});
   }
 
+  updateTodo() async {
+    await todos.doc(docId).update({
+      "title": txtController.text,
+      "time": DateTime.now(),
+    });
+    txtController.clear();
+  }
+
+  deleteTodo(docId) async {
+    await todos
+        .doc(docId)
+        .delete()
+        .then((value) => print("Todo Deleted"))
+        .catchError(
+          (error) => print("Failed to delete todo: $error"),
+        );
+  }
+
   Stream<QuerySnapshot> getTodos() {
     return todos.snapshots();
   }
+
+  // registerUser() async {
+  //   try {
+  //       await firebaseAuth.createUserWithEmailAndPassword()
+  //       .then((value) {
+  //          print("User Added successfully");
+  //         await users.doc(value.uid).set({});
+  //       })
+  //       .catchError(
+  //         (error) => print("Failed to delete todo: $error"),
+  //       );
+  //   } catch (e) {}
+  // }
+
+  // createOrFoundChatRoom(){
+
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +80,7 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           IconButton(
             onPressed: () async {
-              await addTodos();
+              isEdit ? await updateTodo() : await addTodos();
             },
             icon: const Icon(Icons.add_task),
           )
@@ -55,10 +93,20 @@ class _HomeViewState extends State<HomeView> {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                return Text(
-                  "${snapshot.data!.docs[index]['title']}",
-                  style: const TextStyle(
-                    fontSize: 30,
+                return ListTile(
+                  title: Text(
+                    "${snapshot.data!.docs[index]['title']}",
+                    style: const TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    onPressed: () {
+                      isEdit = true;
+                      txtController.text = snapshot.data!.docs[index]['title'];
+                      docId = snapshot.data!.docs[index].id;
+                    },
+                    icon: const Icon(Icons.task_alt),
                   ),
                 );
               },
